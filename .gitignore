@@ -1,0 +1,185 @@
+# ================================
+# Node.js Dependencies & Package Managers
+# ================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ================================
+# Build Output & Distribution
+# ================================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+*.tgz
+dist-ssr/
+web-build/
+
+# ================================
+# Environment Variables & Config
+# ================================
+.env
+.env.*
+!.env.example
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# ================================
+# Logs & Debug Files
+# ================================
+logs/
+*.log
+*.log.*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.nyc_output
+coverage/
+*.lcov
+
+# ================================
+# TypeScript & Build Caches
+# ================================
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+.cache/
+.parcel-cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# ================================
+# Mobile Development (React Native/Expo)
+# ================================
+.expo/
+.expo-shared/
+expo-env.d.ts
+.eas/
+eas-build-pre-install-*
+
+# Metro bundler cache
+.metro-health-check*
+
+# Native build artifacts
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+.kotlin/
+
+# Generated native folders (if using Expo managed workflow)
+/android/
+/ios/
+
+# React Native specific
+.react-native-cli.config.js
+
+# ================================
+# IDE & Editor Files
+# ================================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.tmp
+*.temp
+*~
+.history/
+.vs/
+.vscode-test/
+
+# ================================
+# Operating System Files
+# ================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ================================
+# Temporary & Runtime Files
+# ================================
+*.pid
+*.seed
+*.pid.lock
+.grunt/
+bower_components/
+.lock-wscript
+.npm/
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+.vscode-test/
+
+# ================================
+# Project Specific
+# ================================
+app-example/
+
+# ================================
+# Test & Coverage
+# ================================
+.nyc_output/
+coverage/
+*.lcov
+.jest/
+junit.xml
+test-results/
+
+# ================================
+# Database & Storage
+# ================================
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+data/
+uploads/

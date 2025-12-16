@@ -1,10 +1,10 @@
 import express, { type Request, type Response } from 'express';
-import dotenv from 'dotenv';
+import path from 'path';
+import appConfig from './config/env';
 
-dotenv.config();
+const __dirname = path.resolve()
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.get('/api/health', (req: Request, res: Response) => {
     res.json({
@@ -13,6 +13,17 @@ app.get('/api/health', (req: Request, res: Response) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Get app ready for deployment
+if (appConfig.NODE_ENV === 'production') {
+    // Serve static files from the React frontend app
+    app.use(express.static(path.join(__dirname, '../admin/dist')));
+
+    // Anything that doesn't match the above, send back index.html
+    app.get('/{*any}', (req: Request, res: Response) => {
+        res.sendFile(path.join(__dirname, '../admin', 'dist', 'index.html'));
+    });
+}
+
+app.listen(appConfig.PORT, () => {
+    console.log(`Server is running on port ${appConfig.PORT}`);
 })
