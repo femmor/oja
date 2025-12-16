@@ -9,8 +9,7 @@
   "type": "module",
   "workspaces": [
     "admin",
-    "backend",
-    "mobile"
+    "backend"
   ],
   "scripts": {
     "install:all": "bun install",

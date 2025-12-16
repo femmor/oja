@@ -8,4 +8,12 @@ const appConfig = {
     DB_URL: process.env.DB_URL || '',
 };
 
+// Validate required configurations
+const requiredConfigs = ['DB_URL'];
+requiredConfigs.forEach((config) => {
+    if (!appConfig[config as keyof typeof appConfig]) {
+        throw new Error(`Missing required configuration: ${config}`);
+    }
+});
+
 export default appConfig;
