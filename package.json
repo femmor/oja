@@ -12,6 +12,7 @@
     "backend"
   ],
   "scripts": {
+    "dev": "bun run build:admin && NODE_ENV=development bun start",
     "install:all": "bun install",
     "install:admin": "bun install --cwd admin",
     "install:backend": "bun install --cwd backend",
