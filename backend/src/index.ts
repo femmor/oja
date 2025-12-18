@@ -2,10 +2,17 @@ import express, { type Request, type Response } from 'express';
 import path from 'path';
 import appConfig from './config/env';
 import connectDB from './config/db';
+import { clerkMiddleware } from '@clerk/express'
 
 const __dirname = path.resolve()
 
 const app = express();
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../admin/dist')));
+
+// Initialize Clerk middleware
+app.use(clerkMiddleware()); // Adds auth object to requests
 
 app.get('/api/health', (req: Request, res: Response) => {
     res.json({
@@ -13,9 +20,6 @@ app.get('/api/health', (req: Request, res: Response) => {
         timestamp: new Date().toISOString()
     });
 });
-
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, '../admin/dist')));
 
 // Anything that doesn't match the above, send back index.html
 app.get('/{*any}', (_req: Request, res: Response) => {
