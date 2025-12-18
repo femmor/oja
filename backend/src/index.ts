@@ -22,7 +22,7 @@ app.use('/inngest', serve({
     functions
 }));
 
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', (_req: Request, res: Response) => {
     res.json({
         status: 'OK',
         timestamp: new Date().toISOString()

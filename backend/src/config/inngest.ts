@@ -1,5 +1,4 @@
 import { Inngest } from "inngest";
-import connectDB from "./db";
 import User from "../models/user.model";
 
 // Create a client to send and receive events
@@ -13,9 +12,6 @@ const syncUser = inngest.createFunction(
     { id: 'sync-user-to-db', name: 'Sync Clerk User to MongoDB' },
     { event: "clerk/user.created" },
     async ({ event }) => {
-        // Connect to the database when this module is imported
-        connectDB();
-
         const { id, email_addresses, first_name, last_name, profile_image_url } = event.data;
 
         const existingUser = await User.findOne({ clerkId: id });
@@ -44,9 +40,6 @@ const deleteUserFromDB = inngest.createFunction(
     { id: 'delete-user-from-db', name: 'Delete Clerk User from MongoDB' },
     { event: "clerk/user.deleted" },
     async ({ event }) => {
-        // Connect to the database when this module is imported
-        connectDB();
-
         const { id } = event.data;
 
         const deletedUser = await User.findOneAndDelete({ clerkId: id });
