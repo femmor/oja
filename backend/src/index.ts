@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, '../admin/dist')));
 app.use(clerkMiddleware()); // Adds auth object to requests
 
 // Inngest webhook endpoint
-app.use('/inngest', serve({
+app.use('/api/inngest', serve({
     client: inngest,
     functions
 }));
