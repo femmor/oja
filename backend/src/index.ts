@@ -3,6 +3,8 @@ import path from 'path';
 import appConfig from './config/env';
 import connectDB from './config/db';
 import { clerkMiddleware } from '@clerk/express'
+import { serve } from "inngest/express"
+import { functions, inngest } from "./config/inngest";
 
 const __dirname = path.resolve()
 
@@ -13,6 +15,12 @@ app.use(express.static(path.join(__dirname, '../admin/dist')));
 
 // Initialize Clerk middleware
 app.use(clerkMiddleware()); // Adds auth object to requests
+
+// Inngest webhook endpoint
+app.use('/inngest', serve({
+    client: inngest,
+    functions
+}));
 
 app.get('/api/health', (req: Request, res: Response) => {
     res.json({
