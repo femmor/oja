@@ -6,6 +6,9 @@ import { clerkMiddleware } from '@clerk/express'
 import { serve } from "inngest/express"
 import { functions, inngest } from "./config/inngest";
 
+// Route imports
+import adminRoutes from './routes/admin.route';
+
 const __dirname = path.resolve()
 
 const app = express();
@@ -29,6 +32,9 @@ app.get('/api/health', (_req: Request, res: Response) => {
         timestamp: new Date().toISOString()
     });
 });
+
+// API routes 
+app.use('/api/admin', adminRoutes);
 
 // Anything that doesn't match the above, send back index.html
 app.get('/{*any}', (_req: Request, res: Response) => {
