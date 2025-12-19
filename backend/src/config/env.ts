@@ -13,6 +13,7 @@ const appConfig = {
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL || '',
 };
 
 // Validate required configurations
@@ -24,7 +25,8 @@ const requiredConfigs = [
     'INNGEST_EVENT_KEY',
     'CLOUDINARY_CLOUD_NAME',
     'CLOUDINARY_API_KEY',
-    'CLOUDINARY_API_SECRET'
+    'CLOUDINARY_API_SECRET',
+    'ADMIN_EMAIL'
 ];
 requiredConfigs.forEach((config) => {
     if (!appConfig[config as keyof typeof appConfig]) {
