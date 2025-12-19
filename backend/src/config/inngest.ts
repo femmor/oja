@@ -1,9 +1,11 @@
 import { Inngest } from "inngest";
 import User from "../models/user.model";
+import appConfig from "./env";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({
-    id: "oja-commerce"
+    id: "oja-commerce",
+    eventKey: appConfig.INNGEST_EVENT_KEY
 });
 
 // Create Inngest functions to handle Clerk user events
