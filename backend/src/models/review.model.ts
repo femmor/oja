@@ -23,6 +23,10 @@ const ReviewSchema = new Schema(
             min: 1,
             max: 5
         },
+        comment: {
+            type: String,
+            trim: true
+        }
     },
     {
         timestamps: true
