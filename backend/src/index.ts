@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, '../admin/dist')));
 
 // Initialize Clerk middleware
 app.use(clerkMiddleware()); // Adds auth object to requests
+app.use(express.json());
 
 // Inngest webhook endpoint
 app.use('/api/inngest', serve({
