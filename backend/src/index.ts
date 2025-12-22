@@ -1,4 +1,4 @@
-import express, { type Request, type Response } from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import path from 'path';
 import appConfig from './config/env';
 import connectDB from './config/db';
@@ -8,6 +8,7 @@ import { functions, inngest } from "./config/inngest";
 
 // Route imports
 import adminRoutes from './routes/admin.route';
+import { errorMiddleware } from './middleware/error.middleware';
 
 const __dirname = path.resolve()
 
@@ -35,6 +36,14 @@ app.get('/api/health', (_req: Request, res: Response) => {
 
 // API routes 
 app.use('/api/admin', adminRoutes);
+
+// Error handling middleware - must come after all routes
+app.use(errorMiddleware);
+
+// 404 handler - must come after error middleware
+app.use((req: Request, res: Response) => {
+    res.status(404).json({ message: `Route ${req.originalUrl} not found` });
+});
 
 // Anything that doesn't match the above, send back index.html
 app.get('/{*any}', (_req: Request, res: Response) => {
