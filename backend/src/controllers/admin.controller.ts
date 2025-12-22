@@ -140,8 +140,34 @@ const updateProduct = async (req: Request, res: Response) => {
     }
 }
 
-const deleteProduct = (req: Request, res: Response) => {
-    // implementation
+const deleteProduct = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found." });
+        }
+
+        // delete images from cloudinary
+        if (product.images && product.images.length > 0) {
+            const deletePromises = product.images.map(imageUrl => {
+                const publicId = imageUrl.split('/').pop()?.split('.')[0];
+                if (publicId) {
+                    return cloudinary.uploader.destroy(`products/${publicId}`);
+                }
+            }).filter(Boolean);
+
+            await Promise.all(deletePromises);
+        }
+
+        await Product.findByIdAndDelete(id);
+
+        return res.status(200).json({ message: "Product deleted successfully." });
+    } catch (error) {
+        console.error("Error deleting product:", error);
+        return res.status(500).json({ message: "Internal server error." });
+    }
 }
 
 export { createProduct, getAllProducts, updateProduct, deleteProduct };
