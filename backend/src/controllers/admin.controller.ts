@@ -211,7 +211,7 @@ const updateOrderStatus = asyncHandler(async (req: Request, res: Response) => {
     const { status } = req.body;
 
     if (!["pending", "shipped", "delivered", "cancelled"].includes(status)) {
-        throw new Error("Invalid status value");
+        throw new ValidationError("Invalid order status. Must be one of: pending, shipped, delivered, cancelled");
     }
 
     const order = await Order.findById(id);
