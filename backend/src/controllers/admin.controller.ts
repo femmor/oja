@@ -3,7 +3,17 @@ import asyncHandler from "express-async-handler";
 import cloudinary from "../config/cloudinary";
 import Product, { type IProduct } from "../models/product.model";
 import { ValidationError, NotFoundError } from "../utils/errors";
+import Order from "../models/order.model";
+import User from "../models/user.model";
 
+/**
+ * Admin Controllers
+ * Handles product, order, and customer management for admin users.
+ */
+
+/*
+   Product Controllers
+**/
 const createProduct = asyncHandler(async (req: Request, res: Response) => {
     // Extract product details from request body
     const { name, price, description, stock, category } = req.body;
@@ -168,4 +178,94 @@ const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json({ message: "Product deleted successfully." });
 });
 
-export { createProduct, getAllProducts, updateProduct, deleteProduct };
+
+/*
+    Order Controllers
+**/
+
+const getAllOrders = asyncHandler(async (_req: Request, res: Response) => {
+    const orders = await Order.find()
+        .populate("user", "name email")
+        .populate("orderItems.product")
+        .sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+});
+
+const getOrderById = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const order = await Order.findById(id)
+        .populate("user", "name email")
+        .populate("orderItems.product")
+
+    if (!order) {
+        throw new NotFoundError("Order");
+    }
+
+    res.status(200).json({ order });
+});
+
+const updateOrderStatus = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!["pending", "shipped", "delivered", "cancelled"].includes(status)) {
+        throw new ValidationError("Invalid order status. Must be one of: pending, shipped, delivered, cancelled");
+    }
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+        throw new NotFoundError("Order");
+    }
+
+    order.orderStatus = status;
+
+    if (status === "shipped" && !order.shippedAt) {
+        order.shippedAt = new Date();
+    }
+
+    if (status === "delivered" && !order.deliveredAt) {
+        order.deliveredAt = new Date();
+    }
+
+    await order.save();
+
+    res.status(200).json({ message: `Order ${id} status updated to ${status}`, order });
+});
+
+/*
+    Customers Controllers
+**/
+const getAllCustomers = asyncHandler(async (_req: Request, res: Response) => {
+    const customers = await User.find().sort({ createdAt: -1 });
+    res.status(200).json({ customers });
+});
+
+const getDashboardStats = asyncHandler(async (_req: Request, res: Response) => {
+    const totalOrders = await Order.countDocuments();
+    const totalProducts = await Product.countDocuments();
+    const totalCustomers = await User.countDocuments();
+
+    // Calculate total revenue
+    const orders = await Order.aggregate([
+        {
+            $group: {
+                _id: null,
+                total: { $sum: "$totalPrice" }
+            }
+        }
+    ]);
+
+    const totalRevenue = orders[0]?.total || 0;
+
+    res.status(200).json({
+        totalOrders,
+        totalProducts,
+        totalCustomers,
+        totalRevenue
+    });
+});
+
+export { createProduct, getAllProducts, updateProduct, deleteProduct, getAllOrders, getOrderById, updateOrderStatus, getAllCustomers, getDashboardStats };
