@@ -7,6 +7,7 @@ import { serve } from "inngest/express"
 import { functions, inngest } from "./config/inngest";
 
 // Route imports
+import userRoutes from './routes/user.route';
 import adminRoutes from './routes/admin.route';
 import { errorMiddleware } from './middleware/error.middleware';
 
@@ -36,7 +37,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
 
 // API routes 
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/users', userRoutes);
 // Error handling middleware - must come after all routes
 app.use(errorMiddleware);
 

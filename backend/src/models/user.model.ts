@@ -1,5 +1,16 @@
-import mongoose, { Schema } from "mongoose";
-import { AddressSchema } from "./address.model";
+import mongoose, { Schema, Document } from "mongoose";
+import { AddressSchema, type IAddress } from "./address.model";
+
+interface IUSER extends Document {
+    clerkId: string;
+    email: string;
+    name: string;
+    imageUrl?: string;
+    addresses: IAddress[];
+    wishlist: mongoose.Types.ObjectId[];
+    createdAt: Date;
+    updatedAt: Date;
+}
 
 const UserSchema = new Schema(
     {
@@ -34,6 +45,6 @@ const UserSchema = new Schema(
     }
 );
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model<IUSER>("User", UserSchema);
 
 export default User;
