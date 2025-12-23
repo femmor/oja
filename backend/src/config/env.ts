@@ -26,7 +26,6 @@ const requiredConfigs = [
     'CLOUDINARY_CLOUD_NAME',
     'CLOUDINARY_API_KEY',
     'CLOUDINARY_API_SECRET',
-    'ADMIN_EMAIL'
 ];
 requiredConfigs.forEach((config) => {
     if (!appConfig[config as keyof typeof appConfig]) {
