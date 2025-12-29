@@ -1,14 +1,21 @@
 import { requireAuth } from "@clerk/express";
-import User from "../models/user.model";
+import User, { type IUser } from "../models/user.model";
 import appConfig from "../config/env";
 
 import type { NextFunction, Request, Response } from "express";
+
+export interface RequestWithAuth extends Request {
+    auth: {
+        userId: string;
+    };
+    user?: IUser;
+}
 
 const protectRoute = [
     requireAuth(),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const clerkId = (req as any).auth.userId;
+            const clerkId = (req as RequestWithAuth).auth.userId;
 
             if (!clerkId) {
                 return res.status(401).json({ message: "Unauthorized - invalid token" });
@@ -20,7 +27,7 @@ const protectRoute = [
             }
 
             // Attach user to request object
-            (req as any).user = user;
+            (req as RequestWithAuth & { user?: typeof user }).user = user;
 
             next();
         } catch (error) {
@@ -31,11 +38,11 @@ const protectRoute = [
 ]
 
 const adminOnly = (req: Request, res: Response, next: NextFunction) => {
-    if (!(req as any).user) {
+    if (!(req as RequestWithAuth & { user?: IUser }).user) {
         return res.status(401).json({ message: "Unauthorized - user not found" });
     }
 
-    if ((req as any).user.email !== appConfig.ADMIN_EMAIL) {
+    if ((req as RequestWithAuth & { user?: IUser })?.user?.email !== appConfig.ADMIN_EMAIL) {
         return res.status(403).json({ message: "Forbidden - admin access only!" });
     }
 
