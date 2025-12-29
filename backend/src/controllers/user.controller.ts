@@ -135,18 +135,57 @@ const deleteAddress = asyncHandler(async (req: Request, res: Response) => {
 /**
  * Wishlist Controllers
  */
-const addToWishlist = asyncHandler(async (req: Request, res: Response) => {
-    // Logic to add product to wishlist
-    res.status(201).json({ message: 'Product added to wishlist' });
-});
 
 const getWishlist = asyncHandler(async (req: Request, res: Response) => {
-    // Logic to get user's wishlist
-    res.status(200).json({ wishlist: [] });
+    const userId = (req as any).auth.userId;
+    const user = await User.findById(userId).populate('wishlist');
+
+    if (!user) {
+        throw new ValidationError("User not found.");
+    }
+
+    res.status(200).json({ wishlist: user.wishlist });
+});
+
+const addToWishlist = asyncHandler(async (req: Request, res: Response) => {
+    const { productId } = req.body;
+    const userId = (req as any).auth.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new ValidationError("User not found.");
+    }
+
+    // Check if product is already in wishlist
+    if (user.wishlist.includes(productId)) {
+        throw new ValidationError("Product is already in wishlist.");
+    }
+
+    user.wishlist.push(productId);
+    await user.save();
+
+    res.status(200).json({ message: 'Product added to wishlist' });
 });
 
 const removeFromWishlist = asyncHandler(async (req: Request, res: Response) => {
-    // Logic to remove product from wishlist
+    const { productId } = req.params;
+    const userId = (req as any).auth.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new ValidationError("User not found.");
+    }
+
+    const originalLength = user.wishlist.length;
+    user.wishlist = user.wishlist.filter((id: any) => id.toString() !== productId);
+
+    if (user.wishlist.length === originalLength) {
+        throw new ValidationError("Product not found in wishlist.");
+    }
+    await user.save();
+
     res.status(200).json({ message: 'Product removed from wishlist' });
 });
 
