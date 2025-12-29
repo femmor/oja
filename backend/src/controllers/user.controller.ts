@@ -7,7 +7,7 @@ import asyncHandler from "express-async-handler";
 import User from "../models/user.model";
 import { ValidationError } from "../utils/errors";
 import type { IAddress } from "../models/address.model";
-
+import type { RequestWithAuth } from "../middleware/auth.middleware";
 
 /**
  * Address Controllers
@@ -20,7 +20,7 @@ const addAddress = asyncHandler(async (req: Request, res: Response) => {
         throw new ValidationError("All address fields are required.");
     }
 
-    const userId = (req as any).auth.userId;
+    const userId = (req as RequestWithAuth).auth.userId;
     const user = await User.findById(userId);
 
     if (!user) {
@@ -70,7 +70,7 @@ const updateAddress = asyncHandler(async (req: Request, res: Response) => {
         throw new ValidationError("At least one field must be provided for update.");
     }
 
-    const userId = (req as any).auth.userId;
+    const userId = (req as RequestWithAuth).auth.userId;
     const addressId = req.params.addressId;
 
     const user = await User.findById(userId);
@@ -85,13 +85,13 @@ const updateAddress = asyncHandler(async (req: Request, res: Response) => {
     }
 
     // Update address fields
-    address.label = label || address.label;
-    address.fullName = fullName || address.fullName;
-    address.streetAddress = streetAddress || address.streetAddress;
-    address.city = city || address.city;
-    address.state = state || address.state;
-    address.zipCode = zipCode || address.zipCode;
-    address.phoneNumber = phoneNumber || address.phoneNumber;
+    address.label = label ?? address.label;
+    address.fullName = fullName ?? address.fullName;
+    address.streetAddress = streetAddress ?? address.streetAddress;
+    address.city = city ?? address.city;
+    address.state = state ?? address.state;
+    address.zipCode = zipCode ?? address.zipCode;
+    address.phoneNumber = phoneNumber ?? address.phoneNumber;
 
     // If isDefault is true, unset previous default addresses
     if (isDefault) {

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { AddressSchema, type IAddress } from "./address.model";
 
-interface IUSER extends Document {
+export interface IUser extends Document {
     clerkId: string;
     email: string;
     name: string;
@@ -45,6 +45,6 @@ const UserSchema = new Schema(
     }
 );
 
-const User = mongoose.model<IUSER>("User", UserSchema);
+const User = mongoose.model<IUser>("User", UserSchema);
 
 export default User;
